@@ -1,0 +1,115 @@
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  line-height: 60px; /* Vertically center the text there */
+  background-color: #f5f5f5;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+body > .container {
+  padding: 60px 15px 0;
+}
+
+.footer > .container {
+  text-align: left;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+code {
+  font-size: 80%;
+}
+
+
+
+
+
+
+
+
+
+.btn-margin {
+  margin-left: 1em; }
+
+.grid {
+  display: grid;
+  grid-gap: 1em; }
+
+#add-btn {
+  width: 100px; }
+
+#approvalList,
+#requestList {
+  width: 100%; }
+
+.img-container {
+  display: inline-block;
+  position: relative;
+  padding: 0.5em; }
+
+.img {
+  display: block;
+  width: auto;
+  height: auto; }
+
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: inherit;
+  width: inherit;
+  opacity: 0;
+  background-color: rgba(255, 255, 255, 0.5); }
+
+.img-container:hover .overlay {
+  opacity: 1; }
+
+.overlay-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%); }
+
+.approve-btn {
+  width: 90px;
+  height: 38px;
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%); }
+
+.reject-btn {
+  width: 90px;
+  height: 38px;
+  position: absolute;
+  top: 65%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%); }
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .grid {
+    grid-template-columns: 1fr 1fr 3fr; } }
