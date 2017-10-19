@@ -1,17 +1,13 @@
 import React from 'react';
 
-class Footer extends React.Component {
-  render() {
-    return (
+const Footer = props => (
       <footer className="footer">
         <div className="container">
           <span className="text-muted">
-            <a href="https://github.com/eskaine/booktrade" target="__blank">Github</a>
+            <a href={props.externalURL} target="__blank">{props.linkName}</a>
           </span>
         </div>
       </footer>
-    );
-  }
-}
+)
 
 export default Footer;

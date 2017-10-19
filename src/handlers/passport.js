@@ -7,10 +7,10 @@ var User = require('../models/users');
 module.exports = function(passport) {
 
   var passwordHandler = new PasswordHandler();
-  var defaultProjection = {
-    email: 1,
-    name: 1,
-    password: 1
+
+  var errorRes = {
+    type: '',
+    message: ''
   };
 
   passport.serializeUser(function(user, done) {
@@ -30,24 +30,31 @@ module.exports = function(passport) {
   }, function(req, email, password, done) {
     User.findOne({
       email: email
-    }, defaultProjection).exec(function(err, user) {
+    }, {__v: 0}).exec(function(err, user) {
       if (err) {
-        console.log('log error');
-        console.log(err);
         return done(err);
       }
 
+      console.log('user haha');
+      console.log(user);
+
       if (!user) {
-        req.session.emailError = true;
+        errorRes.type = 'email';
+        errorRes.message = 'Invalid email.';
+        req.session.error = errorRes;
         return done(null, false);
       }
 
       passwordHandler.verify(user.password, password).then(function fulfilled() {
         return done(null, user);
       }, function rejected() {
-        req.session.passwordError = true;
+        errorRes.type = 'password';
+        errorRes.message = 'Invalid password.';
+        req.session.error = errorRes;
         return done(null, false);
       });
+
+
 
     });
   }));
@@ -57,10 +64,9 @@ module.exports = function(passport) {
     passwordField: 'password',
     passReqToCallback: true
   }, function(req, email, password, done) {
-
     User.findOne({
       email: email
-    }, defaultProjection).exec(function(err, user) {
+    }, {email: 1, _id: 0}).exec(function(err, user) {
       if (err)
         return done(err);
 
@@ -78,8 +84,10 @@ module.exports = function(passport) {
           });
         });
       } else {
-        req.session.emailError = true;
-        return done(null, user);
+        errorRes.type = 'email';
+        errorRes.message = 'Email taken.';
+        req.session.error = errorRes;
+        return done(null, false);
       }
     });
 

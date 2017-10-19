@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import {Switch} from 'react-router-dom';
 
-//Layout components
-import NavBar from './components/layout/navbar';
-import Footer from './components/layout/footer';
+//Presentational components
+import Footer from './components/modules/footer';
 
-//Content components
+//Container components
 import Home from './components/content/home';
-import Auth from './components/content/auth';
+import NavBar from './components/containers/navbar';
+import Auth from './components/containers/auth';
 import Books from './components/content/books';
+import Profile from './components/containers/profile';
 
 //Route filtering
 import {BaseRoute, PrivateRoute} from './components/routing/routeFilters';
@@ -25,9 +26,10 @@ class App extends Component {
           <BaseRoute path="/login" exact component={Auth} />
           <PrivateRoute path="/mybooks" exact component={Books} />
           <PrivateRoute path="/allbooks" exact component={Books} />
+          <PrivateRoute path="/profile" exact component={Profile} />
         </Switch>
 
-        <Footer />
+        <Footer externalURL="https://github.com/eskaine/booktrade" linkName="Github" />
       </div>
     );
   }

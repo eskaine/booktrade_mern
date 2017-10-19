@@ -1,6 +1,14 @@
 'use strict';
 
+const BookHandler = require('../handlers/bookHandler.js');
+const TradeHandler = require('../handlers/tradeHandler.js');
+const ProfileHandler = require('../handlers/profileHandler.js')
+
 module.exports = function(app, passport) {
+
+  var bookHandler = new BookHandler();
+  var tradeHandler = new TradeHandler();
+  var profileHandler = new ProfileHandler();
 
   const ERROR_MSG = {
     SIGNUP: "Email already taken. Try another.",
@@ -14,6 +22,8 @@ module.exports = function(app, passport) {
       req.session.userParams = {
         isAuthenticated: req.isAuthenticated(),
         name: req.user.name,
+        city: req.user.address.city,
+        state: req.user.address.state,
         books: [],
         requests: req.user.requestsCount,
         approvals: 0
@@ -21,33 +31,26 @@ module.exports = function(app, passport) {
     }
   }
 
-  app.route('/signup').post(passport.authenticate('signup'), function(req, res) {
+  app.route('/signup').post(passport.authenticate('signup', {
+    successRedirect: '/success',
+    failureRedirect: '/error'
+  }));
+
+  app.route('/login').post(passport.authenticate('login', {
+    successRedirect: '/success',
+    failureRedirect: '/error'
+  }));
+
+  app.route('/error').get(function (req, res) {
+    res.status(202).send({error: req.session.error});
+  });
+
+  app.route('/success').get(function (req, res) {
     createUserParams(req);
-    let response = req.session.userParams;
-
-    if(req.session.emailError) {
-      response =  {isAuthenticated: false, message: ERROR_MSG.SIGNUP};
-    }
-
-    res.send(response);
+    res.send(req.session.userParams);
   });
 
-  app.route('/login').post(passport.authenticate('login'), function (req, res) {
-    let response = {
-      isAuthenticated: false
-    };
-
-    if(req.session.emailError) {
-      response.message = ERROR_MSG.LOGIN_EMAIL;
-    } else if(req.session.passwordError) {
-      response.message = ERROR_MSG.LOGIN_PASS;
-    } else {
-      createUserParams(req);
-      response = req.session.userParams;
-    }
-
-    res.send(response);
-  });
+  app.route('/profile').post(profileHandler.updateProfile);
 
   app.route('/user').get(function (req, res) {
     console.log(' get user');

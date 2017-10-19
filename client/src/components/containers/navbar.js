@@ -2,15 +2,13 @@ import React, { Component } from 'react';
 import {NavLink} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Requests from '../../controllers/requests';
-import {setAuth} from '../../actions';
+import Actions from '../../actions';
 
 class NavBar extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      titles: ["Sign Up", "Login"],
-      paths: ["/signup", "/login"],
       defaultTitles: ["Sign Up", "Login"],
       defaultPaths: ["/signup", "/login"],
       loggedTitles: ["All Books", "My Books", "", "Logout"],
@@ -18,24 +16,31 @@ class NavBar extends Component {
     }
   }
 
-  prepareProps = () => {
-    let names, paths;
-    let store = this.context.store;
+  generateLinks = () => {
+    let store = this.context.store.getState();
+    let names = this.state.defaultTitles;
+    let paths = this.state.defaultPaths;
 
-    if(store.getState().isAuthenticated) {
+    if(store.isAuthenticated) {
       names = this.state.loggedTitles;
       paths = this.state.loggedPaths;
-    } else {
-      names = this.state.defaultTitles;
-      paths = this.state.defaultPaths;
     }
-    return {names, paths};
+
+    return paths.map((path, i) => {
+      let name = names[i];
+
+      if(path === '/logout') {
+        return (<NavLink className="nav-link" to="/logout" onClick={this.handleLogout}>{name}</NavLink>);
+      }
+
+      return (<NavLink className="nav-link" exact to={path}>{name}</NavLink>);
+    });
   }
 
   handleLogout = () => {
     let store = this.context.store;
     Requests.logout(function () {
-      store.dispatch(setAuth(false));
+      store.dispatch(Actions.setAuth(false));
     });
   }
 
@@ -51,19 +56,6 @@ class NavBar extends Component {
   }
 
   render() {
-    let {names, paths} = this.prepareProps();
-    var links = paths.map((path, i) => {
-      let name = names[i];
-
-      if(path === '/logout') {
-        return (<NavLink className="nav-link" to="/logout" onClick={this.handleLogout}>{name}</NavLink>)
-      }
-
-      return (
-        <NavLink className="nav-link" exact to={path}>{name}</NavLink>
-      )
-    });
-
     return (
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container">
@@ -77,7 +69,7 @@ class NavBar extends Component {
               <NavLink className="nav-link" exact to="/">Home</NavLink>
             </ul>
             <ul className="navbar-nav justify-content-end">
-              {links}
+              {this.generateLinks()}
             </ul>
           </div>
         </div>

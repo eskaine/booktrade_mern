@@ -1,5 +1,6 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
+import Card from '../modules/card';
 
 class Home extends React.Component {
 
@@ -18,11 +19,7 @@ class Home extends React.Component {
           <div className="row">
             {Array.apply(null, Array(3)).map(() => {
               return (
-                <div className="col-md-4">
-                  <h2>Heading</h2>
-                  <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                  <p><button className="btn btn-secondary">View details &raquo;</button></p>
-                </div>
+                <Card />
               );
             })}
           </div>

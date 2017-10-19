@@ -1,34 +1,18 @@
-export const setAuth = isAuthenticated => {
-  return {
-    type: 'SET_AUTHENTICATION',
-    isAuthenticated
-  }
-}
+import {setAuth} from './auth';
+import {setName, setCity, setState} from './userDetails';
+import counters from './counters';
 
-export const setName = name => {
-  return {
-    type: 'SET_NAME',
-    name
-  }
-}
-
-export const setCity = city => {
-  return {
-    type: 'SET_CITY',
-    city
-  }
-}
-
-export const setState = state => {
-  return {
-    type: 'SET_STATE',
-    state
-  }
-}
-
-export const actions = {
+const Actions = {
     setAuth: setAuth,
     setName: setName,
     setCity: setCity,
-    setState: setState
+    setState: setState,
+    setApprovals: counters.setApprovals,
+    incApprovals: counters.incApprovals,
+    decApprovals: counters.decApprovals,
+    setRequests: counters.setRequests,
+    incRequests: counters.incRequests,
+    decRequests: counters.decRequests
 }
+
+export default Actions;
