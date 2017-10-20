@@ -23,7 +23,6 @@ class Profile extends React.Component {
     let state = InputParams('State', 'text');
     let oldPass = InputParams('Old Password', 'password');
     let newPass = InputParams('New Password', 'password');
-
     return {name, city, state, oldPass, newPass};
   }
 
@@ -57,7 +56,7 @@ class Profile extends React.Component {
     });
   }
 
-  resetPassword() {
+  resetPassword = () => {
     this.setState({
       oldPass: '',
       newPass: ''
@@ -74,9 +73,26 @@ class Profile extends React.Component {
       state: this.state.state
     };
 
-    Requests.submit('/profile', params, function success() {
+    Requests.post('/profile', params, function success() {
       SetProfile(store, state.name, state.city, state.state);
-    }, null);
+    }, function failure() {
+
+    });
+  }
+
+  handlePassword = (e) => {
+    e.preventDefault();
+    let reset = this.resetPassword;
+    let params = {
+      oldPass: this.state.oldPass,
+      newPass: this.state.newPass
+    };
+
+    Requests.post('/password', params, function success() {
+      reset();
+    }, function failure() {
+
+    });
   }
 
   componentWillMount() {
@@ -98,10 +114,10 @@ class Profile extends React.Component {
             <br />
             <h2>Update Profile</h2>
             <br />
-            <form novalidate>
-              <Input defaultValue={this.state.name} params={name} callback={this.setInputName} />
-              <Input defaultValue={this.state.city} params={city} callback={this.setInputCity} />
-              <Input defaultValue={this.state.state} params={state} callback={this.setInputState} />
+            <form>
+              <Input value={this.state.name} params={name} callback={this.setInputName} />
+              <Input value={this.state.city} params={city} callback={this.setInputCity} />
+              <Input value={this.state.state} params={state} callback={this.setInputState} />
               <br />
               <button className="btn btn-primary" onClick={this.handleProfile}>Save Changes</button>
             </form>
@@ -110,10 +126,10 @@ class Profile extends React.Component {
             <h2>Change Password</h2>
             <br />
             <form>
-              <Input params={oldPass} callback={this.setOldPass} />
-              <Input params={newPass} callback={this.setNewPass} />
+              <Input value={this.state.oldPass} params={oldPass} callback={this.setOldPass} />
+              <Input value={this.state.newPass} params={newPass} callback={this.setNewPass} />
               <br />
-              <button className="btn btn-primary" type="submit">Save Changes</button>
+              <button className="btn btn-primary" onClick={this.handlePassword}>Save Changes</button>
             </form>
           </div>
         </div>

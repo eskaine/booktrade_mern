@@ -1,23 +1,22 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {Switch} from 'react-router-dom';
-
 //Presentational components
 import Footer from './components/modules/footer';
-
 //Container components
-import Home from './components/content/home';
+import Home from './components/containers/home';
 import NavBar from './components/containers/navbar';
 import Auth from './components/containers/auth';
-import Books from './components/content/books';
+import Books from './components/containers/books';
 import Profile from './components/containers/profile';
-
 //Route filtering
 import {BaseRoute, PrivateRoute} from './components/routing/routeFilters';
 
-class App extends Component {
+class App extends React.Component {
   render() {
-    return (
+
+   return (
       <div className="App">
+
         <NavBar />
 
         <Switch >
@@ -30,6 +29,7 @@ class App extends Component {
         </Switch>
 
         <Footer externalURL="https://github.com/eskaine/booktrade" linkName="Github" />
+
       </div>
     );
   }

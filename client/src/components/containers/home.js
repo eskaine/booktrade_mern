@@ -18,9 +18,7 @@ class Home extends React.Component {
         <div className="container">
           <div className="row">
             {Array.apply(null, Array(3)).map(() => {
-              return (
-                <Card />
-              );
+              return (<Card />);
             })}
           </div>
         </div>

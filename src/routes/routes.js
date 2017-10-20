@@ -41,6 +41,10 @@ module.exports = function(app, passport) {
     failureRedirect: '/error'
   }));
 
+  app.route('/addbook').post(bookHandler.queryBook);
+  app.route('/mybooks').get(bookHandler.displayMyBooks);
+  app.route('/allbooks').get(bookHandler.displayAllBooks);
+
   app.route('/error').get(function (req, res) {
     res.status(202).send({error: req.session.error});
   });
@@ -51,20 +55,12 @@ module.exports = function(app, passport) {
   });
 
   app.route('/profile').post(profileHandler.updateProfile);
-
-  app.route('/user').get(function (req, res) {
-    console.log(' get user');
-    res.send('/signup');
-  });
+  app.route('/password').post(profileHandler.updatePassword);
 
   app.route('/logout').get(function(req, res) {
     delete req.session.userParams;
     req.logout();
     res.end();
-  });
-
-  app.route('*').get(function(req, res) {
-    console.log(req.url);
   });
 
 }

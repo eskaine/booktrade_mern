@@ -10,10 +10,10 @@ function BookHandler() {
     Book.aggregate([
       {$match: {"owner_id": String(req.user._id)}},
       {$sort: {title: 1}},
-      {$project: {imageUrl: 1, request_from: 1, isApproved: 1}},
+      {$project: {title: 1, imageUrl: 1, request_from: 1, isApproved: 1}},
       {$group: {
         _id: 0,
-        books: {$push: {id: "$_id", imageUrl: "$imageUrl", isRequested: {$cond: [{$ifNull: ["$request_from", false]}, true, false]}}},
+        books: {$push: {id: "$_id", title: "$_title", imageUrl: "$imageUrl", isRequested: {$cond: [{$ifNull: ["$request_from", false]}, true, false]}}},
         request_from_count: {
           $sum: {$cond: [{$ifNull: ["$request_from", false]}, 1, 0]}
         },
@@ -26,11 +26,11 @@ function BookHandler() {
         throw err;
 
       if (result.length > 0) {
-        req.session.renderParams.books = result[0].books;
-        req.session.renderParams.approvals = result[0].request_from_count - result[0].isApproved_count;
+        req.session.userParams.approvals = result[0].request_from_count - result[0].isApproved_count;
+        result = result[0].books;
       }
-      req.session.renderParams.active = req.url;
-      res.render('mybooks.pug', req.session.renderParams);
+
+      res.send(result);
     });
   }
 
@@ -51,9 +51,8 @@ function BookHandler() {
     ]).exec(function(err, result) {
       if (err)
         throw err;
-      req.session.renderParams.books = result;
-      req.session.renderParams.active = req.url;
-      res.render('allbooks.pug', req.session.renderParams);
+
+      res.send(result);
     });
   }
 
@@ -74,11 +73,16 @@ function BookHandler() {
         newBook.title = body.items[0].volumeInfo.title;
         newBook.imageUrl = body.items[0].volumeInfo.imageLinks.smallThumbnail;
         newBook.owner_id = req.user._id;
-        newBook.save(function(err) {
+        newBook.save(function(err, result) {
           if (err)
             return err;
 
-          res.redirect('/mybooks');
+          let book = {
+            id: result._id,
+            title: result.title,
+            imageUrl: result.imageUrl
+          };
+          res.send(book);
         });
       }
     });

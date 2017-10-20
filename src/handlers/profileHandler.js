@@ -21,10 +21,6 @@ function ProfileHandler() {
   }
 
   this.updateProfile = function(req, res) {
-
-    console.log('update profile');
-    console.log(req.body);
-
     var profile = {
       name: req.body.name,
       address: {
@@ -39,23 +35,22 @@ function ProfileHandler() {
       if (err)
         throw err;
 
-        console.log(result);
-      //req.session.renderParams.name = req.body.name;
-      //req.session.renderParams.city = req.body.city;
-      //req.session.renderParams.state = req.body.state;
       res.end();
     });
   }
 
   this.updatePassword = function(req, res) {
-    var oldPass = req.body['old-password'];
-    var newPass = req.body['new-password'];
+    var oldPass = req.body['oldPass'];
+    var newPass = req.body['newPass'];
 
     passwordHandler.update(req.user.password, oldPass, newPass, function(hash) {
       User.findOneAndUpdate({
         email: req.user.email
       }, {password: hash}).exec(function(err, result) {
-        res.redirect('/profile');
+        if (err)
+          throw err;
+
+        res.end();
       });
     });
   }

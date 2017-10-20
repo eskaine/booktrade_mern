@@ -16,6 +16,35 @@ class Auth extends React.Component {
     };
   }
 
+  setButtons(path) {
+    let param;
+    if(path === "/signup") {
+      param = this.buttonParams("Sign Up", "Create Account", "btn btn-success", "Log In", "/login");
+    } else {
+      param = this.buttonParams("Log In", "Log In", "btn btn-primary", "Sign Up", "/signup");
+    }
+    return param;
+  }
+
+  buttonParams(title, name, className, altName, altPath) {
+    return {
+      title: title,
+      submitBtnName: name,
+      submitBtnClass: className,
+      altBtnName: altName,
+      altBtnPath: altPath
+    }
+  }
+
+  renderName(path) {
+    if(path === "/signup") {
+      let params = InputParams("Name", "text");
+      return(
+        <Input params={params} callback={this.setInputName} />
+      );
+    }
+  }
+
   setInputName = (e) => {
     this.setState({
       inputName: e.target.value
@@ -38,6 +67,7 @@ class Auth extends React.Component {
     e.preventDefault();
     let store = this.context.store;
     let path = this.props.match.url;
+    let history = this.props.history;
 
     let params = {
       email: this.state.inputEmail,
@@ -48,47 +78,15 @@ class Auth extends React.Component {
       params.name = this.state.inputName;
     }
 
-    store.subscribe(() => {
-      this.props.history.push('/mybooks');
-    });
-
-    Requests.submit(path, params, function success(res) {
+    Requests.post(path, params, function success(res) {
       if(res.isAuthenticated) {
         SetStates(store, res);
+        history.push('/mybooks');
       }
     }, function invalid() {
 
     });
 
-  }
-
-  setButtons = (path) => {
-    let param;
-    if(path === "/signup") {
-      param = this.buttonParams("Sign Up", "Create Account", "btn btn-success", "Log In", "/login");
-    } else {
-      param = this.buttonParams("Log In", "Log In", "btn btn-primary", "Sign Up", "/signup");
-    }
-    return param;
-  }
-
-  buttonParams = (title, name, className, altName, altPath) => {
-    return {
-      title: title,
-      submitBtnName: name,
-      submitBtnClass: className,
-      altBtnName: altName,
-      altBtnPath: altPath
-    }
-  }
-
-  renderName = (path) => {
-    if(path === "/signup") {
-      let params = InputParams("Name", "text");
-      return(
-        <Input params={params} callback={this.setInputName} />
-      );
-    }
   }
 
   render() {

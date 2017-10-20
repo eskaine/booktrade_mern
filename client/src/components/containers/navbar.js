@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import {NavLink} from 'react-router-dom';
+import React from 'react';
+import {NavLink, withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Requests from '../../controllers/requests';
 import Actions from '../../actions';
 
-class NavBar extends Component {
+class NavBar extends React.Component {
 
   constructor(props) {
     super(props);
@@ -16,11 +16,10 @@ class NavBar extends Component {
     }
   }
 
-  generateLinks = () => {
+  generateLinks() {
     let store = this.context.store.getState();
     let names = this.state.defaultTitles;
     let paths = this.state.defaultPaths;
-
     if(store.isAuthenticated) {
       names = this.state.loggedTitles;
       paths = this.state.loggedPaths;
@@ -28,19 +27,19 @@ class NavBar extends Component {
 
     return paths.map((path, i) => {
       let name = names[i];
-
       if(path === '/logout') {
         return (<NavLink className="nav-link" to="/logout" onClick={this.handleLogout}>{name}</NavLink>);
       }
-
       return (<NavLink className="nav-link" exact to={path}>{name}</NavLink>);
     });
   }
 
   handleLogout = () => {
     let store = this.context.store;
-    Requests.logout(function () {
+    let history = this.props.history;
+    Requests.logout(function() {
       store.dispatch(Actions.setAuth(false));
+      history.push('/');
     });
   }
 
@@ -63,7 +62,6 @@ class NavBar extends Component {
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
-
           <div className="collapse navbar-collapse" id="navbar-menu">
             <ul className="navbar-nav mr-auto">
               <NavLink className="nav-link" exact to="/">Home</NavLink>
@@ -82,4 +80,4 @@ NavBar.contextTypes = {
   store: PropTypes.object
 }
 
-export default NavBar;
+export default withRouter(NavBar);

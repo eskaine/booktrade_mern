@@ -35,9 +35,6 @@ module.exports = function(passport) {
         return done(err);
       }
 
-      console.log('user haha');
-      console.log(user);
-
       if (!user) {
         errorRes.type = 'email';
         errorRes.message = 'Invalid email.';
@@ -53,9 +50,6 @@ module.exports = function(passport) {
         req.session.error = errorRes;
         return done(null, false);
       });
-
-
-
     });
   }));
 
