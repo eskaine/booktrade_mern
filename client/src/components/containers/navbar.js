@@ -1,7 +1,7 @@
 import React from 'react';
 import {NavLink, withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Requests from '../../controllers/requests';
+import Requests from '../../common/requests';
 import Actions from '../../actions';
 
 class NavBar extends React.Component {
@@ -28,9 +28,9 @@ class NavBar extends React.Component {
     return paths.map((path, i) => {
       let name = names[i];
       if(path === '/logout') {
-        return (<NavLink className="nav-link" to="/logout" onClick={this.handleLogout}>{name}</NavLink>);
+        return (<NavLink key="/logout" className="nav-link" to="/logout" onClick={this.handleLogout}>{name}</NavLink>);
       }
-      return (<NavLink className="nav-link" exact to={path}>{name}</NavLink>);
+      return (<NavLink key={path} className="nav-link" exact to={path}>{name}</NavLink>);
     });
   }
 

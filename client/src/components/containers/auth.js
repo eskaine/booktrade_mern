@@ -1,7 +1,7 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Requests from '../../controllers/requests';
+import Requests from '../../common/requests';
 import {SetStates} from '../../common/storeFunctions';
 import Input from '../modules/input';
 import InputParams from '../../common/inputParams';
@@ -102,7 +102,7 @@ class Auth extends React.Component {
             <br />
             <h2>{params.title}</h2>
             <br />
-            <form novalidate>
+            <form noValidate>
               {this.renderName(path)}
               <Input params={emailParams} callback={this.setInputEmail} />
               <Input params={passwordParams} callback={this.setInputPassword} />

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Input from '../modules/input';
 import InputParams from '../../common/inputParams';
-import Requests from '../../controllers/requests';
+import Requests from '../../common/requests';
 import {SetProfile} from '../../common/storeFunctions';
 
 class Profile extends React.Component {

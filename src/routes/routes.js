@@ -41,11 +41,16 @@ module.exports = function(app, passport) {
     failureRedirect: '/error'
   }));
 
-  app.route('/addbook').post(bookHandler.queryBook);
   app.route('/mybooks').get(bookHandler.displayMyBooks);
   app.route('/allbooks').get(bookHandler.displayAllBooks);
+  app.route('/addbook').post(bookHandler.queryBook);
+  app.route('/removebook').post(bookHandler.removeBook);
+  app.route('/requestbook').post(tradeHandler.requestBook);
+  app.route('/profile').post(profileHandler.updateProfile);
+  app.route('/password').post(profileHandler.updatePassword);
 
   app.route('/error').get(function (req, res) {
+    //TODO error msg
     res.status(202).send({error: req.session.error});
   });
 
@@ -53,9 +58,6 @@ module.exports = function(app, passport) {
     createUserParams(req);
     res.send(req.session.userParams);
   });
-
-  app.route('/profile').post(profileHandler.updateProfile);
-  app.route('/password').post(profileHandler.updatePassword);
 
   app.route('/logout').get(function(req, res) {
     delete req.session.userParams;

@@ -1,5 +1,6 @@
 import Axios from 'axios';
-var requests = {
+
+var Requests = {
 
   post: function (path, params, firstCB, secondCB) {
       Axios.post(path, params)
@@ -22,7 +23,7 @@ var requests = {
     Axios.get(path)
     .then(function(res) {
       if(res.status === 200 && res.statusText === "OK" && res.data) {
-        cb(res);
+        cb(res.data);
       }
     })
     .catch(function (error) {
@@ -36,10 +37,10 @@ var requests = {
         callback();
     })
     .catch(function (error) {
-      console.log(error.status);
+      console.log(error);
     });
   }
 
 }
 
-export default requests;
+export default Requests;

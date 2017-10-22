@@ -1,38 +1,38 @@
 const setApprovals = value => {
   return {
-    type: 'SET_COUNTER',
+    type: 'SET_APPROVALS_COUNTER',
     value
   }
 }
 
 const incApprovals = () => {
   return {
-    type: 'INCREMENT',
+    type: 'APPROVALS_INCREMENT',
   }
 }
 
 const decApprovals = () => {
   return {
-    type: 'DECREMENT'
+    type: 'APPROVALS_DECREMENT'
   }
 }
 
 const setRequests = value => {
   return {
-    type: 'SET_COUNTER',
+    type: 'SET_REQUESTS_COUNTER',
     value
   }
 }
 
 const incRequests = () => {
   return {
-    type: 'INCREMENT',
+    type: 'REQUESTS_INCREMENT',
   }
 }
 
 const decRequests = () => {
   return {
-    type: 'DECREMENT'
+    type: 'REQUESTS_DECREMENT'
   }
 }
 

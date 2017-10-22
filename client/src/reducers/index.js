@@ -1,13 +1,13 @@
 import {combineReducers} from 'redux';
 import isAuthenticated from './auth';
 import userDetails from './userDetails';
-import {approvalCounter, requestCounter} from './counters';
+import {requestsCount, approvalsCount} from './counters';
 
 const user = combineReducers({
   isAuthenticated,
   userDetails,
-  requestCounter,
-  approvalCounter
+  requestsCount,
+  approvalsCount
 });
 
 export default user;

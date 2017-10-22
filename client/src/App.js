@@ -6,8 +6,10 @@ import Footer from './components/modules/footer';
 import Home from './components/containers/home';
 import NavBar from './components/containers/navbar';
 import Auth from './components/containers/auth';
-import Books from './components/containers/books';
+import MyBooks from './components/containers/mybooks';
+import AllBooks from './components/containers/allbooks';
 import Profile from './components/containers/profile';
+import Trade from './components/containers/trade';
 //Route filtering
 import {BaseRoute, PrivateRoute} from './components/routing/routeFilters';
 
@@ -23,8 +25,8 @@ class App extends React.Component {
           <BaseRoute path="/" exact component={Home} />
           <BaseRoute path="/signup" exact component={Auth} />
           <BaseRoute path="/login" exact component={Auth} />
-          <PrivateRoute path="/mybooks" exact component={Books} />
-          <PrivateRoute path="/allbooks" exact component={Books} />
+          <PrivateRoute path="/mybooks" exact component={Trade} childComponent={MyBooks} />
+          <PrivateRoute path="/allbooks" exact component={Trade} childComponent={AllBooks} />
           <PrivateRoute path="/profile" exact component={Profile} />
         </Switch>
 

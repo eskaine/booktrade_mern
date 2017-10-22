@@ -17,8 +17,8 @@ class Home extends React.Component {
 
         <div className="container">
           <div className="row">
-            {Array.apply(null, Array(3)).map(() => {
-              return (<Card />);
+            {Array.apply(null, Array(3)).map((item, i) => {
+              return (<Card key={"item" + i} />);
             })}
           </div>
         </div>

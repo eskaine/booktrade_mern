@@ -13,7 +13,7 @@ function BookHandler() {
       {$project: {title: 1, imageUrl: 1, request_from: 1, isApproved: 1}},
       {$group: {
         _id: 0,
-        books: {$push: {id: "$_id", title: "$_title", imageUrl: "$imageUrl", isRequested: {$cond: [{$ifNull: ["$request_from", false]}, true, false]}}},
+        books: {$push: {id: "$_id", title: "$title", imageUrl: "$imageUrl", isRequested: {$cond: [{$ifNull: ["$request_from", false]}, true, false]}}},
         request_from_count: {
           $sum: {$cond: [{$ifNull: ["$request_from", false]}, 1, 0]}
         },
@@ -42,7 +42,8 @@ function BookHandler() {
       {$project: {_id: 1, owner_id: 1, title: 1, imageUrl: 1}},
       {$sort: {title: 1}},
       {$project: {
-        _id: 1,
+        id: "$_id",
+        title: 1,
         imageUrl: 1,
         isOwner: {
           $cond: [{$eq: ["$owner_id", String(req.user._id)]}, 1, 0]
@@ -82,6 +83,7 @@ function BookHandler() {
             title: result.title,
             imageUrl: result.imageUrl
           };
+
           res.send(book);
         });
       }
@@ -89,11 +91,11 @@ function BookHandler() {
   }
 
   this.removeBook = function(req, res) {
-    Book.remove({_id: req.params.bookID}).exec(function(err, result) {
+    Book.remove({_id: req.body.id}).exec(function(err, result) {
       if (err)
         throw err;
 
-      res.send(true);
+      res.send();
     });
   }
 

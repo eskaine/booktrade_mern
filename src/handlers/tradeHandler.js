@@ -11,7 +11,6 @@ function TradeHandler() {
     .exec(function(err, result) {
       if (err)
         throw err;
-
       res.send(result);
     });
   }
@@ -37,29 +36,31 @@ function TradeHandler() {
   }
 
   this.requestBook = function(req, res) {
-    Book.findOne({_id: req.params.bookID}).exec(function(err, result) {
+    Book.findOne({_id: req.body.id}).exec(function(err, result) {
       if (err)
         throw err;
       //check if book is already requested for by another use
       if (!result.request_from) {
-        var param = {request_from: req.user._id};
-
-        bookUpdate(req.params.bookID, param, function(respond) {
+        //prepare param
+        var param = {
+          request_from: req.user._id
+        };
+        //update book
+        bookUpdate(req.body.id, param, function(respond) {
           updateRequestsCount(req.user._id, 1)
           .then(function fulfilled(result) {
-            req.session.renderParams.requests = result.requestsCount;
-            res.send({count: result.requestsCount});
+            req.session.userParams.requests = result.requestsCount;
+            res.end();
           });
         });
       }
-
     });
   }
 
   this.deleteRequest = function(req, res) {
     var param = {$unset: {request_from: ""}};
 
-    bookUpdate(req.params.bookID, param, function (respond) {
+    bookUpdate(req.body.id, param, function (respond) {
       updateRequestsCount(respond.request_from, -1)
       .then(function fulfilled(result) {
         var path = req.url.split('/');
@@ -76,12 +77,12 @@ function TradeHandler() {
 
 
 
-//TODO: email form  
+//TODO: email form
 
 
   this.approveRequest = function(req, res) {
     var param = {isApproved: true};
-    bookUpdate(req.params.bookID, param, function(respond) {
+    bookUpdate(req.body.id, param, function(respond) {
       updateRequestsCount(respond.request_from, -1)
       .then(function fulfilled(result) {
         req.session.renderParams.approvals -= 1;

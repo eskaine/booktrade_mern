@@ -1,6 +1,4 @@
 export const setName = name => {
-  console.log('setting name');
-  console.log(name);
   return {
     type: 'SET_NAME',
     name
