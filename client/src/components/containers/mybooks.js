@@ -1,96 +1,99 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AddBookForm from '../modules/addBookForm';
-import BookList from '../modules/booklist';
+import Actions from '../../actions';
 import Requests from '../../common/requests';
-import DOM from '../../common/domFunctions';
+import {SortList, UpdateList} from '../../common/common';
+import BookList from '../modules/booklist';
+import AddBookForm from '../modules/addBookForm';
 
 class MyBooks extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      path: "/mybooks",
-      addpath: "/addbook",
-      requestpath: "/removebook",
-      title: "My Books",
-      book: "",
+      queryBook: "",
+      listID: "mybooks-list",
       list: []
     };
   }
 
   addBook = (e) => {
     e.preventDefault();
+    let list = this.state.list;
+    let store = this.context.store;
     let resetBook = this.resetBook;
-    let updateList = this.updateList;
     let params = {
-      book: this.state.book
+      book: this.state.queryBook
     };
 
-    Requests.post(this.state.addpath, params, function(res) {
+    Requests.post("/addbook", params, function(res) {
       resetBook();
-      updateList(res);
+      store.dispatch(Actions.lists.setMyBooks(SortList(res.book, list)));
     });
   }
 
   removeBook = (e) => {
+    let list = this.state.list;
+    let store = this.context.store;
     let bookID = e.target.id;
     let params = {
-        id: e.target.id
+        id: bookID
     };
 
-    Requests.post(this.state.requestpath, params, function(res) {
-      //update dom
-      DOM.removeBook(bookID);
+    Requests.post("/removebook", params, function(res) {
+      UpdateList(bookID, list)
+      .then(function(result) {
+        store.dispatch(Actions.lists.setMyBooks(result.newList));
+      });
     });
-  }
-
-  updateList = (book) => {
-    let list = [].concat(this.state.list);
-    list.push(book);
-    list.sort(function(a, b) {
-      let titleA = a.title.toUpperCase();
-      let titleB = b.title.toUpperCase();
-      return titleA.localeCompare(titleB);
-    });
-    this.setList(list);
   }
 
   setInputBook = (e) => {
     this.setState({
-      book: e.target.value
+      queryBook: e.target.value
     });
   }
 
   resetBook = () => {
     this.setState({
-      book: ""
+      queryBook: ""
     });
   }
 
   setList = (list) => {
-    this.setState({
-      list: list
-    });
+      this.setState({
+        list: list
+      });
   }
 
   componentWillMount() {
-    let setList = this.setList;
-    Requests.get(this.state.path, function (res) {
-      setList(res);
+    let store = this.context.store
+    store.subscribe(() => {
+      let state = store.getState();
+      this.setList(state.myBooksList);
+    });
+  }
+
+  componentDidMount() {
+    let store = this.context.store;
+    Requests.get("/mybooks", function (res) {
+      if(res.approvalsCount > 0)
+        store.dispatch(Actions.counters.setApprovals(res.approvalsCount));
+      if(res.list.length > 0)
+        store.dispatch(Actions.lists.setMyBooks(res.list));
     });
   }
 
   render() {
     return (
-        <div className="container">
+        <div>
           <div className="row">
             <div className="col-md-4">
-              <h2>{this.state.title}</h2>
-              <AddBookForm value={this.state.book} addBook={this.addBook} setInputBook={this.setInputBook} />
+              <h2>My Books</h2>
+              <AddBookForm value={this.state.queryBook} addBook={this.addBook} setInputBook={this.setInputBook} />
             </div>
           </div>
           <hr />
-          <BookList list={this.state.list} path={this.state.path} callback={this.removeBook} />
+          <BookList id={this.state.listID} list={this.state.list} path="/mybooks" callback={this.removeBook} />
         </div>
     );
   }

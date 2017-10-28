@@ -2,7 +2,7 @@
 
 const BookHandler = require('../handlers/bookHandler.js');
 const TradeHandler = require('../handlers/tradeHandler.js');
-const ProfileHandler = require('../handlers/profileHandler.js')
+const ProfileHandler = require('../handlers/profileHandler.js');
 
 module.exports = function(app, passport) {
 
@@ -25,8 +25,7 @@ module.exports = function(app, passport) {
         city: req.user.address.city,
         state: req.user.address.state,
         books: [],
-        requests: req.user.requestsCount,
-        approvals: 0
+        requests: req.user.requestsCount
       }
     }
   }
@@ -43,8 +42,13 @@ module.exports = function(app, passport) {
 
   app.route('/mybooks').get(bookHandler.displayMyBooks);
   app.route('/allbooks').get(bookHandler.displayAllBooks);
+  app.route('/requestsList').get(tradeHandler.requestsList);
+  app.route('/approvalsList').get(tradeHandler.approvalsList);
   app.route('/addbook').post(bookHandler.queryBook);
   app.route('/removebook').post(bookHandler.removeBook);
+  app.route('/deleteRequest').post(tradeHandler.deleteRequest);
+  app.route('/approveRequest').post(tradeHandler.approveRequest);
+  app.route('/rejectRequest').post(tradeHandler.rejectRequest);
   app.route('/requestbook').post(tradeHandler.requestBook);
   app.route('/profile').post(profileHandler.updateProfile);
   app.route('/password').post(profileHandler.updatePassword);

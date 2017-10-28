@@ -1,5 +1,5 @@
 import React from 'react';
-import {Switch} from 'react-router-dom';
+import {Switch, Redirect} from 'react-router-dom';
 //Presentational components
 import Footer from './components/modules/footer';
 //Container components
@@ -28,6 +28,7 @@ class App extends React.Component {
           <PrivateRoute path="/mybooks" exact component={Trade} childComponent={MyBooks} />
           <PrivateRoute path="/allbooks" exact component={Trade} childComponent={AllBooks} />
           <PrivateRoute path="/profile" exact component={Profile} />
+          <Redirect from="/*" to="/" />
         </Switch>
 
         <Footer externalURL="https://github.com/eskaine/booktrade" linkName="Github" />

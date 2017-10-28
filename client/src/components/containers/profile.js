@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Actions from '../../actions';
 import Input from '../modules/input';
 import InputParams from '../../common/inputParams';
 import Requests from '../../common/requests';
-import {SetProfile} from '../../common/storeFunctions';
 
 class Profile extends React.Component {
   constructor(props) {
@@ -74,7 +74,9 @@ class Profile extends React.Component {
     };
 
     Requests.post('/profile', params, function success() {
-      SetProfile(store, state.name, state.city, state.state);
+      store.dispatch(Actions.setName(state.name));
+      store.dispatch(Actions.setCity(state.city));
+      store.dispatch(Actions.setState(state.state));
     }, function failure() {
 
     });
@@ -96,11 +98,11 @@ class Profile extends React.Component {
   }
 
   componentWillMount() {
-    let store = this.context.store.getState();
+    let state = this.context.store.getState();
     this.setState({
-      name: store.userDetails.name,
-      city: store.userDetails.city,
-      state: store.userDetails.state
+      name: state.userDetails.name,
+      city: state.userDetails.city,
+      state: state.userDetails.state
     });
   }
 

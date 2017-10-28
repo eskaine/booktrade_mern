@@ -6,6 +6,7 @@ var Requests = {
       Axios.post(path, params)
      .then(function (res) {
        if(res.status === 200 && res.statusText === "OK") {
+
          if(res.data)
            firstCB(res.data);
          else

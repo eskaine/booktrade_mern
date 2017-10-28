@@ -1,10 +1,10 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
 import PropTypes from 'prop-types';
+import Actions from '../../actions';
 import Requests from '../../common/requests';
-import {SetStates} from '../../common/storeFunctions';
-import Input from '../modules/input';
 import InputParams from '../../common/inputParams';
+import Input from '../modules/input';
 
 class Auth extends React.Component {
   constructor(props){
@@ -16,9 +16,9 @@ class Auth extends React.Component {
     };
   }
 
-  setButtons(path) {
+  setButtons() {
     let param;
-    if(path === "/signup") {
+    if(this.props.match.url === "/signup") {
       param = this.buttonParams("Sign Up", "Create Account", "btn btn-success", "Log In", "/login");
     } else {
       param = this.buttonParams("Log In", "Log In", "btn btn-primary", "Sign Up", "/signup");
@@ -36,8 +36,8 @@ class Auth extends React.Component {
     }
   }
 
-  renderName(path) {
-    if(path === "/signup") {
+  renderName() {
+    if(this.props.match.url === "/signup") {
       let params = InputParams("Name", "text");
       return(
         <Input params={params} callback={this.setInputName} />
@@ -68,9 +68,8 @@ class Auth extends React.Component {
     let store = this.context.store;
     let path = this.props.match.url;
     let history = this.props.history;
-
     let params = {
-      email: this.state.inputEmail,
+      email: this.state.inputEmail.toLowerCase(),
       password: this.state.inputPassword
     };
 
@@ -80,18 +79,21 @@ class Auth extends React.Component {
 
     Requests.post(path, params, function success(res) {
       if(res.isAuthenticated) {
-        SetStates(store, res);
+        store.dispatch(Actions.setAuth(res.isAuthenticated));
+        store.dispatch(Actions.setName(res.name));
+        store.dispatch(Actions.setCity(res.city));
+        store.dispatch(Actions.setState(res.state));
+        store.dispatch(Actions.counters.setRequests(res.requests));
         history.push('/mybooks');
       }
     }, function invalid() {
 
     });
-
   }
 
   render() {
-    let path = this.props.match.url;
-    let params = this.setButtons(path);
+    let nameField = this.renderName();
+    let params = this.setButtons();
     let emailParams = InputParams("Email", "email");
     let passwordParams = InputParams("Password", "password");
 
@@ -103,7 +105,7 @@ class Auth extends React.Component {
             <h2>{params.title}</h2>
             <br />
             <form noValidate>
-              {this.renderName(path)}
+              {nameField}
               <Input params={emailParams} callback={this.setInputEmail} />
               <Input params={passwordParams} callback={this.setInputPassword} />
               <br />

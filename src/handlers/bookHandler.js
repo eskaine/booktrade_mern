@@ -3,34 +3,37 @@
 var request = require('request');
 var shortid = require('shortid');
 var Book = require('../models/books');
+var Respond = require('../common/respond.js');
 
 function BookHandler() {
 
   this.displayMyBooks = function(req, res) {
     Book.aggregate([
-      {$match: {"owner_id": String(req.user._id)}},
+      {$match: {$and: [{owner_id: String(req.user._id)}, {isApproved: {$ne: true}}]}},
       {$sort: {title: 1}},
-      {$project: {title: 1, imageUrl: 1, request_from: 1, isApproved: 1}},
+      {$project: {title: 1, imageUrl: 1, request_from: 1}},
       {$group: {
         _id: 0,
-        books: {$push: {id: "$_id", title: "$title", imageUrl: "$imageUrl", isRequested: {$cond: [{$ifNull: ["$request_from", false]}, true, false]}}},
-        request_from_count: {
+        books: {$push: {_id: "$_id", title: "$title", imageUrl: "$imageUrl", isRequested: {$cond: [{$ifNull: ["$request_from", false]}, true, false]}}},
+        requestsFromCount: {
           $sum: {$cond: [{$ifNull: ["$request_from", false]}, 1, 0]}
         },
-        isApproved_count: {
+        isApprovedCount: {
           $sum: {$cond: [{$ifNull: ["$isApproved", false]}, 1, 0]}
-        },
+        }
       }}
     ]).exec(function(err, result) {
       if (err)
         throw err;
 
-      if (result.length > 0) {
-        req.session.userParams.approvals = result[0].request_from_count - result[0].isApproved_count;
-        result = result[0].books;
+      let respond = Respond.generate();
+
+      if(result.length > 0) {
+        respond.list = result[0].books;
+        respond.approvalsCount = result[0].requestsFromCount - result[0].isApprovedCount;
       }
 
-      res.send(result);
+      res.send(respond);
     });
   }
 
@@ -42,7 +45,7 @@ function BookHandler() {
       {$project: {_id: 1, owner_id: 1, title: 1, imageUrl: 1}},
       {$sort: {title: 1}},
       {$project: {
-        id: "$_id",
+        _id: 1,
         title: 1,
         imageUrl: 1,
         isOwner: {
@@ -53,7 +56,10 @@ function BookHandler() {
       if (err)
         throw err;
 
-      res.send(result);
+      let respond = Respond.generate();
+      respond.list = result;
+
+      res.send(respond);
     });
   }
 
@@ -79,12 +85,12 @@ function BookHandler() {
             return err;
 
           let book = {
-            id: result._id,
+            _id: result._id,
             title: result.title,
             imageUrl: result.imageUrl
           };
 
-          res.send(book);
+          res.send({book: book});
         });
       }
     });
