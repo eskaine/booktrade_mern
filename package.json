@@ -1,7 +1,6 @@
 {
   "name": "booktrade",
   "version": "1.0.0",
-  "description": "minimum mern starter kit",
   "main": "server.js",
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",
