@@ -6,7 +6,8 @@
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "nodemon server.js",
-    "client": "nodemon start-client.js"
+    "client": "nodemon start-client.js",
+    "webpack": "cd client && npm run webpack"
   },
   "repository": {
     "type": "git",

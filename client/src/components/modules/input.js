@@ -1,13 +1,22 @@
 import React from 'react';
 
-const Input = props => (
-  <div className="form-group">
-    <label htmlFor={props.params.id}>{props.params.labelName}</label>
-    <input className="form-control" id={props.params.id} type={props.params.type} placeholder={props.params.placeholder} value={props.value} onChange={props.callback} required />
-    <div className="invalid-feedback">
-      {props.params.invalidMessage}
-    </div>
-  </div>
-)
+class Input extends React.Component {
+
+  render() {
+
+    let name = this.props.fieldName.toLowerCase();
+
+    return(
+      <div className="form-group">
+        <label htmlFor={name}>{this.props.fieldName}</label>
+        <input className={this.props.className} id={name} type={this.props.type} placeholder={this.props.fieldName} value={this.props.value} onChange={this.props.callback} required />
+        <div className="invalid-feedback">
+          {this.props.error}
+        </div>
+      </div>
+    );
+  }
+
+}
 
 export default Input;

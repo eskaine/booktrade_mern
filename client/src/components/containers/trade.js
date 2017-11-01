@@ -156,7 +156,7 @@ class Trade extends React.Component {
         </div>
         <br />
         <br />
-        <Lists history={this.props.history} setRequestsCount={this.setRequestsCount} setApprovalsCount={this.setApprovalsCount} />
+        <Lists history={this.props.history} />
         <br />
       </div>
     );

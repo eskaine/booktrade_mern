@@ -2,9 +2,11 @@
 
 var User = require('../models/users.js');
 var PasswordHandler = require('./passwordHandler.js');
+var ERROR = require('../common/error');
 
 function ProfileHandler() {
   var passwordHandler = new PasswordHandler();
+  var errorRes = ERROR.createRespond();
 
   this.getProfile = function(req, res) {
 
@@ -43,15 +45,26 @@ function ProfileHandler() {
     var oldPass = req.body['oldPass'];
     var newPass = req.body['newPass'];
 
-    passwordHandler.update(req.user.password, oldPass, newPass, function(hash) {
-      User.findOneAndUpdate({
-        email: req.user.email
-      }, {password: hash}).exec(function(err, result) {
-        if (err)
-          throw err;
+    passwordHandler.update(req.user.password, oldPass, newPass, function(hash, error) {
+      if(error) {
+        errorRes.type = ERROR.TYPE.INVALID_PASSWORD;
+        errorRes.message = ERROR.MESSAGE.INVALID_PASSWORD;
+        req.session.error = errorRes;
+        res.redirect('/error');
+      }
 
-        res.end();
-      });
+      if(hash) {
+        User.findOneAndUpdate({
+          email: req.user.email
+        }, {password: hash}).exec(function(err, result) {
+          if (err)
+            throw err;
+
+          res.end();
+        });
+      }
+
+
     });
   }
 

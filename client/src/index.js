@@ -7,10 +7,16 @@ import {Provider} from 'react-redux';
 import {createStore} from 'redux';
 import user from './reducers';
 
-import './css/styles.scss';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import {LoadState, SaveState} from './common/localStorage';
 
-let store = createStore(user);
+import './css/styles.scss';
+
+const persistedState = LoadState();
+const store = createStore(user, persistedState);
+
+store.subscribe(() => {
+  SaveState(store.getState());
+});
 
 var newApp = (
   <Provider store={store}>

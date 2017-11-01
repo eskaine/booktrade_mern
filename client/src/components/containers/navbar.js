@@ -3,25 +3,26 @@ import {NavLink, withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Requests from '../../common/requests';
 import Actions from '../../actions';
+import {DeleteState} from '../../common/localStorage';
 
 class NavBar extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      defaultTitles: ["Sign Up", "Login"],
+      defaultLabels: ["Sign Up", "Login"],
       defaultPaths: ["/signup", "/login"],
-      loggedTitles: ["All Books", "My Books", "", "Logout"],
+      labels: ["All Books", "My Books", "", "Logout"],
       loggedPaths: ["/allbooks", "/mybooks", "/profile", "/logout"]
     }
   }
 
   generateLinks() {
     let store = this.context.store.getState();
-    let names = this.state.defaultTitles;
+    let names = this.state.defaultLabels;
     let paths = this.state.defaultPaths;
     if(store.isAuthenticated) {
-      names = this.state.loggedTitles;
+      names = this.state.labels;
       paths = this.state.loggedPaths;
     }
 
@@ -38,19 +39,35 @@ class NavBar extends React.Component {
     let store = this.context.store;
     let history = this.props.history;
     store.dispatch(Actions.setAuth(false));
+    DeleteState();
     Requests.logout(function(res) {
       history.push('/');
     });
   }
 
-  componentWillReceiveProps() {
-    let store = this.context.store.getState();
-    if(store.isAuthenticated) {
-      let titles = this.state.loggedTitles;
-      titles[2] = store.userDetails.name;
-      this.setState({
-        loggedTitles: titles
-      });
+  setLabels(name) {
+    let titles = this.state.labels;
+    titles[2] = name;
+    this.setState({
+      labels: titles
+    });
+  }
+
+  componentWillMount() {
+    let store = this.context.store;
+    store.subscribe(() => {
+      let state = store.getState();
+      if(state.isAuthenticated) {
+        this.setLabels(state.userDetails.name);
+      }
+    });
+  }
+
+  componentDidMount() {
+    let store = this.context.store;
+    let state = store.getState();
+    if(state.isAuthenticated) {
+      store.dispatch(Actions.setAuth(state.isAuthenticated));
     }
   }
 

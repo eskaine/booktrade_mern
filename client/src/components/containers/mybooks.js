@@ -66,10 +66,12 @@ class MyBooks extends React.Component {
   }
 
   componentWillMount() {
-    let store = this.context.store
+    let store = this.context.store;
     store.subscribe(() => {
-      let state = store.getState();
-      this.setList(state.myBooksList);
+      if(this.props.history.location.pathname === "/mybooks") {
+        let state = store.getState();
+        this.setList(state.myBooksList);
+      }
     });
   }
 
@@ -83,13 +85,21 @@ class MyBooks extends React.Component {
     });
   }
 
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if(nextState.list.length !== this.state.list.length || nextState.queryBook !== this.state.queryBook) {
+      return true;
+    }
+    return false;
+  }
+
   render() {
     return (
         <div>
           <div className="row">
             <div className="col-md-4">
               <h2>My Books</h2>
-              <AddBookForm value={this.state.queryBook} addBook={this.addBook} setInputBook={this.setInputBook} />
+              <AddBookForm value={this.state.queryBook} addBook={this.addBook} callback={this.setInputBook} />
             </div>
           </div>
           <hr />

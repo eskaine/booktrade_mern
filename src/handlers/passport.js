@@ -3,15 +3,12 @@
 var LocalStrategy = require('passport-local').Strategy;
 var PasswordHandler = require('./passwordHandler.js');
 var User = require('../models/users');
+var ERROR = require('../common/error');
 
 module.exports = function(passport) {
 
   var passwordHandler = new PasswordHandler();
-
-  var errorRes = {
-    type: '',
-    message: ''
-  };
+  var errorRes = ERROR.createRespond();
 
   passport.serializeUser(function(user, done) {
     done(null, user.id);
@@ -36,8 +33,8 @@ module.exports = function(passport) {
       }
 
       if (!user) {
-        errorRes.type = 'email';
-        errorRes.message = 'Invalid email.';
+        errorRes.type = ERROR.TYPE.INVALID_EMAIL;
+        errorRes.message = ERROR.MESSAGE.INVALID_EMAIL;
         req.session.error = errorRes;
         return done(null, false);
       }
@@ -45,8 +42,8 @@ module.exports = function(passport) {
       passwordHandler.verify(user.password, password).then(function fulfilled() {
         return done(null, user);
       }, function rejected() {
-        errorRes.type = 'password';
-        errorRes.message = 'Invalid password.';
+        errorRes.type = ERROR.TYPE.INVALID_PASSWORD;
+        errorRes.message = ERROR.MESSAGE.INVALID_PASSWORD;
         req.session.error = errorRes;
         return done(null, false);
       });
@@ -78,8 +75,8 @@ module.exports = function(passport) {
           });
         });
       } else {
-        errorRes.type = 'email';
-        errorRes.message = 'Email taken.';
+        errorRes.type = ERROR.TYPE.EMAIL_TAKEN;
+        errorRes.message = ERROR.MESSAGE.EMAIL_TAKEN;
         req.session.error = errorRes;
         return done(null, false);
       }

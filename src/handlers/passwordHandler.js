@@ -28,8 +28,10 @@ function PasswordHandler() {
   this.update = function(oldHash, oldPass, newPass, callback) {
     var hashFn = this.hash;
     this.verify(oldHash, oldPass)
-    .then(function (){
+    .then(function (res){
       return hashFn(newPass);
+    }, function() {
+      callback(null, true);
     })
     .then(function (newHash){
       callback(newHash);

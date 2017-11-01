@@ -10,13 +10,6 @@ module.exports = function(app, passport) {
   var tradeHandler = new TradeHandler();
   var profileHandler = new ProfileHandler();
 
-  const ERROR_MSG = {
-    SIGNUP: "Email already taken. Try another.",
-    LOGIN_EMAIL: "Email incorrect. Please try again.",
-    LOGIN_PASS: "Password incorrect. Please try again."
-
-  };
-
   function createUserParams(req) {
     if(!req.session.userParams) {
       req.session.userParams = {
@@ -51,11 +44,10 @@ module.exports = function(app, passport) {
   app.route('/rejectRequest').post(tradeHandler.rejectRequest);
   app.route('/requestbook').post(tradeHandler.requestBook);
   app.route('/profile').post(profileHandler.updateProfile);
-  app.route('/password').post(profileHandler.updatePassword);
+  app.route('/updatePassword').post(profileHandler.updatePassword);
 
   app.route('/error').get(function (req, res) {
-    //TODO error msg
-    res.status(202).send({error: req.session.error});
+    res.status(202).send(req.session.error);
   });
 
   app.route('/success').get(function (req, res) {

@@ -38,10 +38,12 @@ class AllBooks extends React.Component {
   }
 
   componentWillMount() {
-    let store = this.context.store
+    let store = this.context.store;
     store.subscribe(() => {
-      let state = store.getState();
-      this.setList(state.allBooksList);
+      if(this.props.history.location.pathname === "/allbooks") {
+        let state = store.getState();
+        this.setList(state.allBooksList);
+      }
     });
   }
 
@@ -52,6 +54,13 @@ class AllBooks extends React.Component {
         store.dispatch(Actions.lists.setAllBooks(res.list));
       }
     });
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if(nextState.list.length !== this.state.list.length) {
+      return true;
+    }
+    return false;
   }
 
   render() {
