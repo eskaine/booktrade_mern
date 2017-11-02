@@ -31,7 +31,7 @@ class App extends React.Component {
           <Redirect from="/*" to="/" />
         </Switch>
 
-        <Footer externalURL="https://github.com/eskaine/booktrade" linkName="Github" />
+        <Footer externalURL="https://github.com/eskaine/booktrade_mern" linkName="Github" />
 
       </div>
     );
