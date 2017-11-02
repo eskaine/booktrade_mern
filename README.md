@@ -2,5 +2,6 @@
 
 ## Overview
 [Free Code Camp](http://freecodecamp.com/) Project
-Book trading app.
+
+Book trading mern stack app.
 
