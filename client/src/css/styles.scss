@@ -33,10 +33,6 @@ code {
 
 /* main styling
 -------------------------------------------------- */
-@mixin top-pos($pos) {
-  top: pos;
-}
-
 .btn-margin {
   margin-left: 1em; }
 
@@ -105,9 +101,10 @@ code {
 }
 
 .approve-btn {
-  @include top-pos(35%);
+  top: 35%;
 }
 
+
 .reject-btn {
-  @include top-pos(65%);
+  top: 65%;
 }

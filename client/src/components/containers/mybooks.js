@@ -97,7 +97,7 @@ class MyBooks extends React.Component {
     return (
         <div>
           <div className="row">
-            <div className="col-md-4">
+            <div className="col-xs-12 col-md-6 col-lg-4">
               <h2>My Books</h2>
               <AddBookForm value={this.state.queryBook} addBook={this.addBook} callback={this.setInputBook} />
             </div>

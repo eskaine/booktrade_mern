@@ -3,22 +3,25 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "nodemon server.js",
-    "client": "nodemon start-client.js",
+    "start": "concurrently \"npm run server\" \"npm run serve\"",
+    "server": "node server.js",
+    "client": "PORT=8081 node start-client.js",
+    "build": "cd client && npm run build",
+    "serve": "cd client && PORT=8081 serve -s build",
     "webpack": "cd client && npm run webpack"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eskaine/barebones-mern-starter.git"
+    "url": "git+https://github.com/eskaine/booktrade_mern.git"
   },
-  "homepage": "https://github.com/eskaine/barebones-mern-starter#readme",
+  "homepage": "https://github.com/eskaine/booktrade_mern#readme",
   "dependencies": {
     "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
     "dotenv": "^4.0.0",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
+    "http-proxy": "^1.16.2",
     "mongoose": "^4.12.1",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
@@ -26,6 +29,7 @@
   },
   "devDependencies": {
     "concurrently": "^3.5.0",
+    "http-proxy-middleware": "^0.17.4",
     "nodemon": "^1.12.1",
     "webpack": "^3.7.1"
   }

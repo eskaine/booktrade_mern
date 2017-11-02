@@ -918,10 +918,15 @@ var _axios2 = _interopRequireDefault(_axios);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//persist express session inbetween passing through cors
+_axios2.default.defaults.withCredentials = true;
+
+var appUrl = "https://booktrade-eskaine.c9users.io";
+
 var Requests = {
 
   post: function post(path, params, firstCB, secondCB) {
-    _axios2.default.post(path, params).then(function (res) {
+    _axios2.default.post(appUrl + path, params).then(function (res) {
       if (res.status === 200 && res.statusText === "OK") {
 
         if (res.data) firstCB(res.data);else firstCB();
@@ -933,7 +938,7 @@ var Requests = {
   },
 
   get: function get(path, cb) {
-    _axios2.default.get(path).then(function (res) {
+    _axios2.default.get(appUrl + path).then(function (res) {
       if (res.status === 200 && res.statusText === "OK" && res.data) {
         cb(res.data);
       }
@@ -943,7 +948,7 @@ var Requests = {
   },
 
   logout: function logout(callback) {
-    _axios2.default.get('/logout').then(function (res) {
+    _axios2.default.get(appUrl + '/logout').then(function (res) {
       callback();
     }).catch(function (error) {
       console.log(error);
@@ -3516,7 +3521,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var BookList = function BookList(props) {
   return _react2.default.createElement(
     'div',
-    { id: props.id, className: 'container' },
+    { id: props.id },
     props.list.map(function (book) {
       return _react2.default.createElement(_book2.default, { key: book._id, path: props.path, book: book, callback: props.callback });
     })
@@ -28145,7 +28150,7 @@ module.exports.default = axios;
 /*!
  * Determine if an object is a Buffer
  *
- * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * @author   Feross Aboukhadijeh <https://feross.org>
  * @license  MIT
  */
 
@@ -29178,7 +29183,6 @@ var Auth = function (_React$Component) {
       var history = _this.props.history;
       var serverFormValidity = _this.serverFormValidity;
       var path = _this.props.match.url;
-
       _this.resetClass();
       var isFormValid = _this.checkFormValidity(e, path);
 
@@ -29378,7 +29382,7 @@ var Auth = function (_React$Component) {
           { className: 'row' },
           _react2.default.createElement(
             'div',
-            { className: 'col-md-6' },
+            { className: 'col-xs-12 col-md-6 col-lg-6' },
             _react2.default.createElement('br', null),
             _react2.default.createElement(
               'h2',
@@ -29571,7 +29575,7 @@ var MyBooks = function (_React$Component) {
           { className: 'row' },
           _react2.default.createElement(
             'div',
-            { className: 'col-md-4' },
+            { className: 'col-xs-12 col-md-6 col-lg-4' },
             _react2.default.createElement(
               'h2',
               null,
@@ -29606,61 +29610,32 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var AddBookForm = function (_React$Component) {
-  _inherits(AddBookForm, _React$Component);
-
-  function AddBookForm() {
-    _classCallCheck(this, AddBookForm);
-
-    return _possibleConstructorReturn(this, (AddBookForm.__proto__ || Object.getPrototypeOf(AddBookForm)).apply(this, arguments));
-  }
-
-  _createClass(AddBookForm, [{
-    key: "render",
-
-    //const AddBookForm = props => (
-    value: function render() {
-
-      return _react2.default.createElement(
-        "form",
-        null,
+var AddBookForm = function AddBookForm(props) {
+  return _react2.default.createElement(
+    "form",
+    null,
+    _react2.default.createElement(
+      "div",
+      { className: "input-group" },
+      _react2.default.createElement("input", { id: "add", className: "form-control", type: "text", name: "book", placeholder: "Add Book", value: props.value, onChange: props.callback }),
+      _react2.default.createElement(
+        "span",
+        { className: "input-group-btn" },
         _react2.default.createElement(
-          "div",
-          { className: "input-group" },
-          _react2.default.createElement("input", { id: "add", className: "form-control", type: "text", name: "book", placeholder: "Add Book", value: this.props.value, onChange: this.props.callback }),
-          _react2.default.createElement(
-            "span",
-            { className: "input-group-btn" },
-            _react2.default.createElement(
-              "button",
-              { id: "add-btn", className: "btn btn-primary", type: "submit", onClick: this.props.addBook },
-              "Add"
-            )
-          )
+          "button",
+          { id: "add-btn", className: "btn btn-primary", type: "submit", onClick: props.addBook },
+          "Add"
         )
-      );
-    }
-
-    //)
-
-  }]);
-
-  return AddBookForm;
-}(_react2.default.Component);
+      )
+    )
+  );
+};
 
 exports.default = AddBookForm;
 
@@ -29786,7 +29761,7 @@ var AllBooks = function (_React$Component) {
           { className: 'row' },
           _react2.default.createElement(
             'div',
-            { className: 'col-md-4' },
+            { className: 'col-md-6' },
             _react2.default.createElement(
               'h2',
               null,
@@ -31828,7 +31803,7 @@ exports = module.exports = __webpack_require__(171)(undefined);
 
 
 // module
-exports.push([module.i, "/* bootstrap footer\n-------------------------------------------------- */\nhtml {\n  position: relative;\n  min-height: 100%; }\n\nbody {\n  margin-bottom: 60px; }\n\n.footer {\n  position: absolute;\n  bottom: 0;\n  width: 100%;\n  height: 60px;\n  line-height: 60px;\n  background-color: #f5f5f5; }\n\nbody > .container {\n  padding: 60px 15px 0; }\n\n.footer > .container {\n  text-align: left;\n  padding-right: 15px;\n  padding-left: 15px; }\n\ncode {\n  font-size: 80%; }\n\n/* main styling\n-------------------------------------------------- */\n.btn-margin {\n  margin-left: 1em; }\n\n.grid {\n  display: grid;\n  grid-gap: 1em; }\n\n#add-btn {\n  width: 100px; }\n\n#approvalList,\n#requestList {\n  width: 100%; }\n\n.img-container {\n  display: inline-block;\n  position: relative;\n  padding: 0.5em; }\n\n.img {\n  display: block;\n  width: auto;\n  height: auto; }\n\n.grayout {\n  -webkit-filter: grayscale(100%);\n  /* Safari 6.0 - 9.0 */\n  filter: grayscale(100%); }\n\n.overlay {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  height: inherit;\n  width: inherit;\n  opacity: 0;\n  background-color: rgba(255, 255, 255, 0.5); }\n\n.img-container:hover .overlay {\n  opacity: 1; }\n\n.overlay-btn {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  -ms-transform: translate(-50%, -50%); }\n\n.approve-btn, .reject-btn {\n  width: 90px;\n  height: 38px;\n  position: absolute;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  -ms-transform: translate(-50%, -50%); }\n\n.approve-btn {\n  top: pos; }\n\n.reject-btn {\n  top: pos; }\n", ""]);
+exports.push([module.i, "/* bootstrap footer\n-------------------------------------------------- */\nhtml {\n  position: relative;\n  min-height: 100%; }\n\nbody {\n  margin-bottom: 60px; }\n\n.footer {\n  position: absolute;\n  bottom: 0;\n  width: 100%;\n  height: 60px;\n  line-height: 60px;\n  background-color: #f5f5f5; }\n\nbody > .container {\n  padding: 60px 15px 0; }\n\n.footer > .container {\n  text-align: left;\n  padding-right: 15px;\n  padding-left: 15px; }\n\ncode {\n  font-size: 80%; }\n\n/* main styling\n-------------------------------------------------- */\n.btn-margin {\n  margin-left: 1em; }\n\n.grid {\n  display: grid;\n  grid-gap: 1em; }\n\n#add-btn {\n  width: 100px; }\n\n#approvalList,\n#requestList {\n  width: 100%; }\n\n.img-container {\n  display: inline-block;\n  position: relative;\n  padding: 0.5em; }\n\n.img {\n  display: block;\n  width: auto;\n  height: auto; }\n\n.grayout {\n  -webkit-filter: grayscale(100%);\n  /* Safari 6.0 - 9.0 */\n  filter: grayscale(100%); }\n\n.overlay {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  height: inherit;\n  width: inherit;\n  opacity: 0;\n  background-color: rgba(255, 255, 255, 0.5); }\n\n.img-container:hover .overlay {\n  opacity: 1; }\n\n.overlay-btn {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  -ms-transform: translate(-50%, -50%); }\n\n.approve-btn, .reject-btn {\n  width: 90px;\n  height: 38px;\n  position: absolute;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  -ms-transform: translate(-50%, -50%); }\n\n.approve-btn {\n  top: 35%; }\n\n.reject-btn {\n  top: 65%; }\n", ""]);
 
 // exports
 

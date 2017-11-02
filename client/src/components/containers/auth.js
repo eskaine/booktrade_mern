@@ -112,7 +112,6 @@ class Auth extends React.Component {
     let history = this.props.history;
     let serverFormValidity = this.serverFormValidity;
     let path = this.props.match.url;
-
     this.resetClass();
     let isFormValid = this.checkFormValidity(e, path);
 
@@ -223,7 +222,7 @@ class Auth extends React.Component {
     return (
       <div className="container">
         <div className="row">
-          <div className="col-md-6">
+          <div className="col-xs-12 col-md-6 col-lg-6">
             <br />
             <h2>{params.title}</h2>
             <br />

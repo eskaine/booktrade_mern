@@ -38,7 +38,7 @@ module.exports = function(passport) {
         req.session.error = errorRes;
         return done(null, false);
       }
-
+    
       passwordHandler.verify(user.password, password).then(function fulfilled() {
         return done(null, user);
       }, function rejected() {
@@ -71,6 +71,7 @@ module.exports = function(passport) {
           newUser.save(function(err) {
             if (err)
               return done(err);
+              
             return done(null, newUser);
           });
         });

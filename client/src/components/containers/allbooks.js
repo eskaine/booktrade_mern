@@ -67,7 +67,7 @@ class AllBooks extends React.Component {
     return (
       <div>
         <div className="row">
-          <div className="col-md-4">
+          <div className="col-md-6">
             <h2>All Books</h2>
           </div>
         </div>
